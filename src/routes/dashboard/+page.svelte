@@ -27,11 +27,49 @@
     }
   });
 
+  const deleteHospital = async (id: string) => {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      error = "Not logged in.";
+      return;
+    }
+
+    const confirmDelete = confirm("Are you sure you want to delete this hospital?");
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/hospitals/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        hospitals = hospitals.filter((h) => h._id !== id);
+      } else {
+        error = `Delete failed: ${await res.text()}`;
+      }
+    } catch (err) {
+      error = `Network error: ${err.message}`;
+    }
+  };
+
   const randomImage = () => {
     const images = ["1a.jpg", "1b.jpg", "1c.jpg"];
     return `/images/hospitals/${images[Math.floor(Math.random() * images.length)]}`;
   };
 </script>
+
+<style>
+  .map-wrapper {
+    height: 300px;
+    position: relative;
+    border-radius: 0.5rem;
+    border: 1px solid #ddd;
+    overflow: hidden;
+  }
+</style>
 
 <section class="section">
   <!-- Header Row -->
@@ -59,24 +97,43 @@
     <p class="notification is-warning">No hospitals found for this user.</p>
   {:else}
     {#each hospitals as hospital}
-      <div class="box">
-        <h2 class="title is-5">{hospital.name}</h2>
-        <div class="columns is-vcentered">
-          <!-- Image -->
-          <div class="column is-one-third">
-            <figure class="image">
-              <img src={randomImage()} alt="Hospital photo" />
-            </figure>
+      <div class="box mb-5">
+        <!-- Row 1: Name and Buttons -->
+        <div class="columns is-vcentered is-mobile is-multiline mb-2">
+          <div class="column is-8">
+            <h2 class="title is-4 has-text-weight-bold is-uppercase">
+              {hospital.name}
+            </h2>
           </div>
-
-          <!-- Map -->
-          <div class="column is-one-third">
-            <HospitalMap lat={hospital.latitude} lng={hospital.longitude} />
+          <div class="column is-4 has-text-right">
+            <a href={`/departments?hospitalId=${hospital._id}`} class="button is-info">
+              Departments
+            </a>            
+            <button
+              class="button is-danger"
+              disabled={hospital.departments && hospital.departments.length > 0}
+              on:click={() => deleteHospital(hospital._id)}
+            >
+              Delete
+            </button>
           </div>
+        </div>
 
-          <!-- Department Button -->
-          <div class="column is-one-third has-text-centered">
-            <a href="/departments/{hospital._id}" class="button is-info is-medium">Departments</a>
+        <!-- Row 2: Image + Map -->
+        <div class="columns is-variable is-1 is-multiline">
+          <div class="column is-one-third">
+            <ImageRotator
+              images={[
+                "/images/hospitals/mater-1a.jpg",
+                "/images/hospitals/mater-1b.jpg",
+                "/images/hospitals/mater-1c.jpg"
+              ]}
+            />
+          </div>
+          <div class="column is-two-thirds">
+            <div class="map-wrapper">
+              <HospitalMap lat={hospital.latitude} lng={hospital.longitude} />
+            </div>
           </div>
         </div>
       </div>
