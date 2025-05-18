@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { page } from "$app/stores";
+  import { goto } from "$app/navigation";
   import StarInput from "$lib/components/StarInput.svelte";
 
   let hospitalId = "";
@@ -25,16 +26,21 @@
   });
 
   const submitRating = async () => {
-  const res = await fetch(`http://localhost:3000/api/hospitals/${hospitalId}/ratings`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ care, cleanliness, friendliness, food })
-  });
+    const res = await fetch(`http://localhost:3000/api/hospitals/${hospitalId}/ratings`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ care, cleanliness, friendliness, food })
+    });
 
-  message = res.ok
-    ? "Thanks for your feedback!"
-    : "Something went wrong submitting your rating.";
-};
+    if (res.ok) {
+      message = "Thanks for your feedback!";
+      setTimeout(() => {
+        goto(`/?highlight=${hospitalId}`);  // 👈 send hospitalId to home
+      }, 2000);
+    } else {
+      message = "Something went wrong submitting your rating.";
+    }
+  };
 </script>
 
 <section class="section">

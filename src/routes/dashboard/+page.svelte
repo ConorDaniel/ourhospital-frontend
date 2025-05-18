@@ -5,6 +5,8 @@
 
   let hospitals = [];
   let error = "";
+  let userEmail = "";
+  let pictureUrl = "";
 
   onMount(async () => {
     const token = localStorage.getItem("jwt");
@@ -14,6 +16,21 @@
     }
 
     try {
+      // Fetch user info
+      const userRes = await fetch("http://localhost:3000/api/users/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (userRes.ok) {
+        const user = await userRes.json();
+        userEmail = user.email;
+        pictureUrl =
+          user.pictureUrl?.trim() ||
+          "https://res.cloudinary.com/dycaquyie/image/upload/v1747570490/Screenshot_2025-05-18_at_13.13.48_dywns0.png";
+      } else {
+        error = "Failed to load user info.";
+      }
+
+      // Fetch hospitals
       const res = await fetch("http://localhost:3000/api/my-hospitals", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -54,11 +71,6 @@
       error = `Network error: ${err.message}`;
     }
   };
-
-  const randomImage = () => {
-    const images = ["1a.jpg", "1b.jpg", "1c.jpg"];
-    return `/images/hospitals/${images[Math.floor(Math.random() * images.length)]}`;
-  };
 </script>
 
 <style>
@@ -68,6 +80,20 @@
     border-radius: 0.5rem;
     border: 1px solid #ddd;
     overflow: hidden;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    margin-right: 1.5rem;
+  }
+
+  .user-info img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+    margin-left: 40px;
   }
 </style>
 
@@ -79,7 +105,14 @@
         <img src="/images/logo.jpg" alt="Logo" style="height: 50px; margin-right: 10px" />
         <span class="title is-4 has-text-primary">ourHospital</span>
       </div>
+      {#if userEmail}
+        <div class="level-item user-info">
+          <img src={pictureUrl} alt="User Picture" />
+          <span class="is-size-6">Logged in as <strong>{userEmail}</strong></span>
+        </div>
+      {/if}
     </div>
+
     <div class="level-right">
       <div class="buttons">
         <a href="/about" class="button is-light">About</a>
@@ -108,7 +141,7 @@
           <div class="column is-4 has-text-right">
             <a href={`/departments?hospitalId=${hospital._id}`} class="button is-info">
               Departments
-            </a>            
+            </a>
             <button
               class="button is-danger"
               disabled={hospital.departments && hospital.departments.length > 0}
