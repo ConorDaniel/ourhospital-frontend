@@ -1,9 +1,27 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
   let firstName = "";
   let lastName = "";
   let email = "";
   let password = "";
   let message = "";
+
+  let hospitals = [];
+  let selectedHospitals: string[] = [];
+
+  onMount(async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/hospitals");
+      if (response.ok) {
+        hospitals = await response.json();
+      } else {
+        message = "❌ Failed to load hospital list";
+      }
+    } catch (err) {
+      message = "❌ Network error: " + err.message;
+    }
+  });
 
   async function handleSignup(event: Event) {
     event.preventDefault();
@@ -17,12 +35,15 @@
           firstName,
           lastName,
           email,
-          password
+          password,
+          hospitals: selectedHospitals
         })
       });
 
       if (response.ok) {
         message = "✅ Sign-up successful!";
+        // Optional: redirect to login page
+        // window.location.href = "/login";
       } else {
         const error = await response.text();
         message = "❌ Sign-up failed: " + error;
@@ -107,6 +128,19 @@
         bind:value={password}
         required
       />
+    </div>
+
+    <div class="field">
+      <label class="label">Select Hospitals</label>
+      <div class="control">
+        <div class="select is-multiple is-fullwidth">
+          <select bind:value={selectedHospitals} multiple required size="5">
+            {#each hospitals as hospital}
+              <option value={hospital._id}>{hospital.name}</option>
+            {/each}
+          </select>
+        </div>
+      </div>
     </div>
 
     <div class="field">

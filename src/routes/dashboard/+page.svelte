@@ -16,28 +16,21 @@
     }
 
     try {
-      // Fetch user info
-      const userRes = await fetch("http://localhost:3000/api/users/me", {
+      // Fetch user info and their hospitals in one go
+      const res = await fetch("http://localhost:3000/api/users/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (userRes.ok) {
-        const user = await userRes.json();
+
+      if (res.ok) {
+        const user = await res.json();
         userEmail = user.email;
         pictureUrl =
           user.pictureUrl?.trim() ||
           "https://res.cloudinary.com/dycaquyie/image/upload/v1747570490/Screenshot_2025-05-18_at_13.13.48_dywns0.png";
+
+        hospitals = user.hospitals ?? [];
       } else {
         error = "Failed to load user info.";
-      }
-
-      // Fetch hospitals
-      const res = await fetch("http://localhost:3000/api/my-hospitals", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
-        hospitals = await res.json();
-      } else {
-        error = "Failed to load hospitals: " + (await res.text());
       }
     } catch (err) {
       error = "Network error: " + err.message;
@@ -71,7 +64,12 @@
       error = `Network error: ${err.message}`;
     }
   };
+  function handleLogout() {
+    localStorage.removeItem("jwt");
+    window.location.href = "/";
+  }
 </script>
+
 
 <style>
   .map-wrapper {
@@ -117,7 +115,7 @@
       <div class="buttons">
         <a href="/about" class="button is-light">About</a>
         <a href="/add-hospital" class="button is-link">Add Hospital</a>
-        <a href="/login" class="button is-danger">Logout</a>
+        <button class="button is-danger" on:click={handleLogout}>Logout</button>
       </div>
     </div>
   </nav>
