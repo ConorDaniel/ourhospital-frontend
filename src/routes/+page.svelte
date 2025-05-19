@@ -132,7 +132,7 @@
                             <a
   								class="button is-link is-light is-medium"
   								style="font-size: 1.1rem; padding: 0.75rem 1.5rem;"
-  								href={`/rate?hospitalId=${hospital._id}`}
+  								href={`/rate?hospitalId=${hospital._id.toString()}`}
 								>
   								⭐ Rate this hospital
 							</a>

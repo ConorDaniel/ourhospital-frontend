@@ -5,6 +5,7 @@
   let lastName = "";
   let email = "";
   let password = "";
+  let role = "user"; // default role
   let message = "";
 
   let hospitals = [];
@@ -36,6 +37,7 @@
           lastName,
           email,
           password,
+          role,
           hospitals: selectedHospitals
         })
       });
@@ -138,6 +140,18 @@
             {#each hospitals as hospital}
               <option value={hospital._id}>{hospital.name}</option>
             {/each}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Role</label>
+      <div class="control">
+        <div class="select">
+          <select bind:value={role}>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
           </select>
         </div>
       </div>
