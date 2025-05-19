@@ -9,16 +9,18 @@
   let pictureUrl = "";
 
   onMount(async () => {
-    const token = localStorage.getItem("jwt");
+    const token = localStorage.getItem("token"); // ✅ was "jwt"
+
     if (!token) {
       error = "Not logged in.";
       return;
     }
 
     try {
-      // Fetch user info and their hospitals in one go
       const res = await fetch("http://localhost:3000/api/users/me", {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (res.ok) {
@@ -38,7 +40,8 @@
   });
 
   const deleteHospital = async (id: string) => {
-    const token = localStorage.getItem("jwt");
+    const token = localStorage.getItem("token"); // ✅ ensure this matches
+
     if (!token) {
       error = "Not logged in.";
       return;
@@ -64,11 +67,13 @@
       error = `Network error: ${err.message}`;
     }
   };
+
   function handleLogout() {
-    localStorage.removeItem("jwt");
+    localStorage.removeItem("token"); // ✅ was "jwt"
     window.location.href = "/";
   }
 </script>
+
 
 
 <style>

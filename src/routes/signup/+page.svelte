@@ -5,7 +5,6 @@
   let lastName = "";
   let email = "";
   let password = "";
-  let role = "user"; // default role
   let message = "";
 
   let hospitals = [];
@@ -28,6 +27,11 @@
     event.preventDefault();
     message = "";
 
+    if (selectedHospitals.length === 0) {
+      message = "❌ Please select at least one hospital.";
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:3000/api/users", {
         method: "POST",
@@ -37,15 +41,16 @@
           lastName,
           email,
           password,
-          role,
+          role: "user", // ✅ Hardcoded
           hospitals: selectedHospitals
         })
       });
 
       if (response.ok) {
-        message = "✅ Sign-up successful!";
-        // Optional: redirect to login page
-        // window.location.href = "/login";
+        message = "✅ Sign-up successful! Redirecting...";
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 1500);
       } else {
         const error = await response.text();
         message = "❌ Sign-up failed: " + error;
@@ -140,18 +145,6 @@
             {#each hospitals as hospital}
               <option value={hospital._id}>{hospital.name}</option>
             {/each}
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="field">
-      <label class="label">Role</label>
-      <div class="control">
-        <div class="select">
-          <select bind:value={role}>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
           </select>
         </div>
       </div>
