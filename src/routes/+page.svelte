@@ -81,6 +81,7 @@
         <div class="navbar-end">
             <div class="navbar-item">
                 <div class="buttons">
+                    <a href="/about" class="button is-light">About</a>
                     <a class="button" href="/login">Log in</a>
                     <a class="button" href="/signup">Sign up</a>
                     <a class="button" href="/charts">📊 Charts</a>

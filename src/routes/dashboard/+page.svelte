@@ -19,17 +19,14 @@
 
     try {
       const res = await fetch("http://localhost:3000/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (res.ok) {
         const user = await res.json();
         userEmail = user.email;
         userRole = user.role;
-        pictureUrl =
-          user.pictureUrl?.trim() ||
+        pictureUrl = user.pictureUrl?.trim() ||
           "https://res.cloudinary.com/dycaquyie/image/upload/v1747570490/Screenshot_2025-05-18_at_13.13.48_dywns0.png";
 
         if (user.role === "admin") {
@@ -143,7 +140,6 @@
 
       <div class="level-right">
         <div class="buttons">
-          <a href="/about" class="button is-light">About</a>
           {#if userRole === "admin"}
             <a href="/admins/master-list" class="button is-primary">➕ Add Hospital</a>
           {/if}
@@ -169,23 +165,34 @@
             </h2>
           </div>
           <div class="column is-4 has-text-right">
-            <a href={`/departments?hospitalId=${hospital._id}`} class="button is-info">
-              Departments
-            </a>
-            <button
-              class="button is-danger"
-              disabled={hospital.departments && hospital.departments.length > 0}
-              on:click={() => deleteHospital(hospital._id)}
-            >
-              Delete
-            </button>
-          </div>
+            <div class="buttons is-right">
+              <a href={`/departments?hospitalId=${hospital._id}`} class="button is-info">
+                Departments
+              </a>
+              {#if userRole === "admin"}
+                <a href={`/admins/edit-hospital?id=${hospital._id}`} class="button is-warning">
+                  ✏️ Edit
+                </a>
+              {/if}
+              <button
+                class="button is-danger"
+                disabled={hospital.departments && hospital.departments.length > 0}
+                on:click={() => deleteHospital(hospital._id)}
+              >
+                Delete
+              </button>
+            </div>
+          </div>          
         </div>
 
         <div class="columns is-variable is-1 is-multiline">
           <div class="column is-one-third">
             <ImageRotator
-              images={["/images/hospitals/mater-1a.jpg","/images/hospitals/mater-1b.jpg","/images/hospitals/mater-1c.jpg"]}
+              images={[
+                "/images/hospitals/mater-1a.jpg",
+                "/images/hospitals/mater-1b.jpg",
+                "/images/hospitals/mater-1c.jpg"
+              ]}
             />
           </div>
           <div class="column is-two-thirds">
