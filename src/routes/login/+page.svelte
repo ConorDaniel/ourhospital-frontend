@@ -108,4 +108,3 @@
     <div class="error">{error}</div>
   {/if}
 </div>
-

@@ -3,8 +3,9 @@
   import { page } from "$app/stores";
   import { get } from "svelte/store";
 
-  let pictureInput: HTMLInputElement;  
+  let pictureInput: HTMLInputElement;
   let departmentId = get(page).url.searchParams.get("departmentId");
+
   let departmentName = "";
   let staffList = [];
   let name = "";
@@ -22,21 +23,25 @@
   });
 
   async function fetchStaff() {
-    const res = await fetch(`http://localhost:3000/api/departments/${departmentId}/staff`);
-    if (res.ok) {
-      staffList = await res.json();
-    } else {
-      error = "Failed to load staff list.";
-    }
-
-    const deptRes = await fetch(`http://localhost:3000/api/departments/${departmentId}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`
+    try {
+      const res = await fetch(`http://localhost:3000/api/departments/${departmentId}/staff`);
+      if (res.ok) {
+        staffList = await res.json();
+      } else {
+        error = "Failed to load staff list.";
       }
-    });
-    if (deptRes.ok) {
-      const dept = await deptRes.json();
-      departmentName = dept.title;
+
+      const deptRes = await fetch(`http://localhost:3000/api/departments/${departmentId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      if (deptRes.ok) {
+        const dept = await deptRes.json();
+        departmentName = dept.title;
+      }
+    } catch (err) {
+      error = "Error fetching staff or department: " + err.message;
     }
   }
 
@@ -49,34 +54,64 @@
       return;
     }
 
-    const token = localStorage.getItem("jwt");
-
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("role", role);
-    formData.append("vignette", vignette);
-
+    let pictureUrl = "";
     if (pictureInput?.files?.length) {
-      formData.append("file", pictureInput.files[0]);
+      const file = pictureInput.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const uploadRes = await fetch("http://localhost:3000/api/images/upload", {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token") || ""}`
+          }
+        });
+
+        if (uploadRes.ok) {
+          const result = await uploadRes.json();
+          pictureUrl = result.secure_url;
+        } else {
+          const errMsg = await uploadRes.text();
+          error = `❌ Image upload failed: ${errMsg}`;
+          return;
+        }
+      } catch (err) {
+        error = "❌ Network error during image upload: " + err.message;
+        return;
+      }
     }
 
-    const res = await fetch(`http://localhost:3000/api/departments/${departmentId}/staff`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      body: formData
-    });
+    try {
+      const token = localStorage.getItem("token");
 
-    if (res.ok) {
-      name = "";
-      role = "";
-      vignette = "";
-      pictureInput.value = "";
-      await fetchStaff();
-    } else {
-      const result = await res.json().catch(() => null);
-      error = result?.message || "Failed to add staff member.";
+      const res = await fetch(`http://localhost:3000/api/departments/${departmentId}/staff`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          role,
+          vignette,
+          pictureUrl
+        })
+      });
+
+      if (res.ok) {
+        name = "";
+        role = "";
+        vignette = "";
+        pictureInput.value = "";
+        await fetchStaff();
+      } else {
+        const result = await res.json().catch(() => null);
+        error = result?.message || "Failed to add staff member.";
+      }
+    } catch (err) {
+      error = "Failed to submit staff member: " + err.message;
     }
   }
 
@@ -84,7 +119,7 @@
     const confirmed = confirm("Are you sure you want to delete this staff member?");
     if (!confirmed) return;
 
-    const token = localStorage.getItem("jwt");
+    const token = localStorage.getItem("token");
     const res = await fetch(`http://localhost:3000/api/staff/${staffId}`, {
       method: "DELETE",
       headers: {
@@ -144,30 +179,22 @@
   <form on:submit={handleSubmit}>
     <div class="field">
       <label class="label" for="name">Name</label>
-      <div class="control">
-        <input class="input" id="name" type="text" bind:value={name} required />
-      </div>
+      <input class="input" id="name" type="text" bind:value={name} required />
     </div>
 
     <div class="field">
       <label class="label" for="role">Role</label>
-      <div class="control">
-        <input class="input" id="role" type="text" bind:value={role} required />
-      </div>
+      <input class="input" id="role" type="text" bind:value={role} required />
     </div>
 
     <div class="field">
       <label class="label" for="vignette">Vignette</label>
-      <div class="control">
-        <textarea class="textarea" id="vignette" bind:value={vignette} required />
-      </div>
+      <textarea class="textarea" id="vignette" bind:value={vignette} required />
     </div>
 
     <div class="field">
       <label class="label" for="picture">Staff Picture (optional)</label>
-      <div class="control">
-        <input class="input" id="picture" type="file" accept="image/*" bind:this={pictureInput} />
-      </div>
+      <input class="input" id="picture" type="file" accept="image/*" bind:this={pictureInput} />
     </div>
 
     <div class="field">
@@ -179,4 +206,3 @@
     <a href="/dashboard" class="button is-light">← Back to Dashboard</a>
   </div>
 </section>
-

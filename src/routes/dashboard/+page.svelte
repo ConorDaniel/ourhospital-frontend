@@ -74,8 +74,6 @@
   }
 </script>
 
-
-
 <style>
   .map-wrapper {
     height: 300px;

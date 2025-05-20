@@ -6,6 +6,7 @@
   let email = "";
   let password = "";
   let message = "";
+  let pictureInput: HTMLInputElement;
 
   let hospitals = [];
   let selectedHospitals: string[] = [];
@@ -23,6 +24,14 @@
     }
   });
 
+  function toggleHospital(id: string) {
+    if (selectedHospitals.includes(id)) {
+      selectedHospitals = selectedHospitals.filter(h => h !== id);
+    } else {
+      selectedHospitals = [...selectedHospitals, id];
+    }
+  }
+
   async function handleSignup(event: Event) {
     event.preventDefault();
     message = "";
@@ -30,6 +39,37 @@
     if (selectedHospitals.length === 0) {
       message = "❌ Please select at least one hospital.";
       return;
+    }
+
+    let pictureUrl = "";
+
+    // ✅ Upload to Cloudinary if file selected
+    if (pictureInput?.files?.length) {
+      const file = pictureInput.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const uploadRes = await fetch("http://localhost:3000/api/images/upload", {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt") || ""}`
+          }
+        });
+
+        if (uploadRes.ok) {
+          const result = await uploadRes.json();
+          pictureUrl = result.secure_url;
+        } else {
+          const error = await uploadRes.text();
+          message = `❌ Image upload failed: ${error}`;
+          return;
+        }
+      } catch (err) {
+        message = "❌ Network error during image upload: " + err.message;
+        return;
+      }
     }
 
     try {
@@ -41,8 +81,9 @@
           lastName,
           email,
           password,
-          role: "user", // ✅ Hardcoded
-          hospitals: selectedHospitals
+          role: "user",
+          hospitals: selectedHospitals,
+          pictureUrl
         })
       });
 
@@ -139,18 +180,26 @@
 
     <div class="field">
       <label class="label">Select Hospitals</label>
-      <div class="control">
-        <div class="select is-multiple is-fullwidth">
-          <select bind:value={selectedHospitals} multiple required size="5">
-            {#each hospitals as hospital}
-              <option value={hospital._id}>{hospital.name}</option>
-            {/each}
-          </select>
-        </div>
+      <div class="box" style="max-height: 180px; overflow-y: auto;">
+        {#each hospitals as hospital}
+          <label class="checkbox mb-1">
+            <input
+              type="checkbox"
+              checked={selectedHospitals.includes(hospital._id)}
+              on:change={() => toggleHospital(hospital._id)}
+            />
+            &nbsp; {hospital.name}
+          </label><br />
+        {/each}
       </div>
     </div>
 
     <div class="field">
+      <label class="label">Optional Profile Picture</label>
+      <input class="input" type="file" accept="image/*" bind:this={pictureInput} />
+    </div>
+
+    <div class="field mt-4">
       <button class="button is-link" type="submit">Submit</button>
     </div>
   </form>
