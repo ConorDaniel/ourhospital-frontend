@@ -54,6 +54,7 @@
 	},
 	"dependencies": {
 		"@ernane/svelte-star-rating": "^1.1.9",
+		"frappe-charts": "^1.6.2",
 		"leaflet": "^1.9.4",
 		"svelte-leafletjs": "^2.0.0"
 	}

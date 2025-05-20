@@ -17,13 +17,14 @@
   let userEmail = "";
   let pictureUrl = "";
   let error = "";
+  let token = "";
 
   let image1Input: HTMLInputElement;
   let image2Input: HTMLInputElement;
   let image3Input: HTMLInputElement;
 
   onMount(async () => {
-    const token = localStorage.getItem("jwt");
+    token = localStorage.getItem("token") || "";
     if (!token) {
       error = "Not logged in.";
       return;
@@ -56,7 +57,7 @@
   });
 
   function handleLogout() {
-    localStorage.removeItem("jwt");
+    localStorage.removeItem("token");
     goto("/");
   }
 
@@ -87,7 +88,7 @@
       const response = await fetch("http://localhost:3000/api/hospitals", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`
+          Authorization: `Bearer ${token}`
         },
         body: formData
       });
@@ -96,7 +97,7 @@
         message = "✅ Hospital added successfully!";
         // Refresh list
         const updated = await fetch("http://localhost:3000/api/hospitals", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
         hospitals = await updated.json();
       } else {

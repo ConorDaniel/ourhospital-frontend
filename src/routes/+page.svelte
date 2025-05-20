@@ -18,32 +18,57 @@
     );
 
     onMount(async () => {
-        try {
-            const res = await fetch("http://localhost:3000/api/hospitals");
-            if (res.ok) {
-                hospitals = await res.json();
+  try {
+    const res = await fetch("http://localhost:3000/api/hospitals");
+    if (!res.ok) {
+      error = "Failed to load hospitals: " + (await res.text());
+      return;
+    }
 
-                // Scroll to and highlight hospital after data loads
-                await tick();
-                if (highlightId) {
-                    const el = document.getElementById(`hospital-${highlightId}`);
-                    if (el) {
-                        el.scrollIntoView({ behavior: "smooth", block: "center" });
-                        el.classList.add("highlight");
-                        setTimeout(() => el.classList.remove("highlight"), 3000);
-                    }
-                }
-            } else {
-                error = "Failed to load hospitals: " + (await res.text());
-            }
-        } catch (err) {
-            error = "Network error: " + err.message;
-        }
-    });
+    const hospitalList = await res.json();
+
+    // Fetch average ratings per hospital
+    const ratings = await Promise.all(
+      hospitalList.map(async (h) => {
+        const r = await fetch(`http://localhost:3000/api/hospitals/${h._id}/ratings/average`);
+        return r.ok ? await r.json() : {};
+      })
+    );
+
+    // Merge hospital + average rating
+    hospitals = hospitalList.map((h, i) => ({
+      ...h,
+      averageRating: ratings[i] ?? {}
+    }));
+
+    // Scroll highlight if needed
+    await tick();
+    if (highlightId) {
+      const el = document.getElementById(`hospital-${highlightId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.classList.add("highlight");
+        setTimeout(() => el.classList.remove("highlight"), 3000);
+      }
+    }
+  } catch (err) {
+    error = "Network error: " + err.message;
+  }
+});
 
     function handleDeptClick() {
         alert("Please log in or sign up to access department details.");
     }
+
+    function stars(score) {
+  const full = Math.round(score ?? 0);
+  const empty = 5 - full;
+  return (
+    `<span style="color:gold;">${"★".repeat(full)}</span>` +
+    `<span style="color:#ddd;">${"★".repeat(empty)}</span>`
+  );
+}
+
 </script>
 
 <nav class="navbar sticky-navbar" role="navigation" aria-label="main navigation">
@@ -58,6 +83,7 @@
                 <div class="buttons">
                     <a class="button" href="/login">Log in</a>
                     <a class="button" href="/signup">Sign up</a>
+                    <a class="button" href="/charts">📊 Charts</a>
                 </div>
             </div>
         </div>
@@ -120,25 +146,43 @@
                 <!-- Row 2: Image, Rate Button, Map -->
                 <div class="columns is-variable is-1 is-multiline">
                     <div class="column is-one-third">
-                        <ImageRotator
+                        {#if hospital.imageUrls && hospital.imageUrls.length > 1}
+                          <ImageRotator images={hospital.imageUrls} />
+                        {:else if hospital.imageUrls && hospital.imageUrls.length === 1}
+                          <figure class="image is-3by2">
+                            <img src={hospital.imageUrls[0]} alt="Hospital Image" style="border-radius: 0.5rem;" />
+                          </figure>
+                        {:else}
+                          <ImageRotator
                             images={[
-                                "/images/hospitals/mater-1a.jpg",
-                                "/images/hospitals/mater-1b.jpg",
-                                "/images/hospitals/mater-1c.jpg"
+                              "/images/hospitals/mater-1a.jpg",
+                              "/images/hospitals/mater-1b.jpg",
+                              "/images/hospitals/mater-1c.jpg"
                             ]}
-                        />
-
+                          />
+                        {/if}
+                      
+                        {#if hospital.averageRating}
+                          <div class="has-text-left mt-3" style="padding-left: 10px;">
+                            <div><strong>Care:</strong> {@html stars(hospital.averageRating.care)}</div>
+                            <div><strong>Cleanliness:</strong> {@html stars(hospital.averageRating.cleanliness)}</div>
+                            <div><strong>Friendliness:</strong> {@html stars(hospital.averageRating.friendliness)}</div>
+                            <div><strong>Food:</strong> {@html stars(hospital.averageRating.food)}</div>
+                          </div>
+                        {:else}
+                          <p class="has-text-grey mt-3 has-text-centered">No ratings yet</p>
+                        {/if}
+                      
                         <div class="has-text-centered mt-3">
-                            <a
-  								class="button is-link is-light is-medium"
-  								style="font-size: 1.1rem; padding: 0.75rem 1.5rem;"
-  								href={`/rate?hospitalId=${hospital._id.toString()}`}
-								>
-  								⭐ Rate this hospital
-							</a>
-
+                          <a
+                            class="button is-link is-light is-medium"
+                            style="font-size: 1.1rem; padding: 0.75rem 1.5rem;"
+                            href={`/rate?hospitalId=${hospital._id.toString()}`}
+                          >
+                            ⭐ Rate this hospital
+                          </a>
                         </div>
-                    </div>
+                      </div>                      
 
                     <div class="column is-two-thirds">
                         <div class="map-wrapper">

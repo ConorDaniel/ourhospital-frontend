@@ -6,10 +6,11 @@
   let hospitals = [];
   let error = "";
   let userEmail = "";
+  let userRole = "";
   let pictureUrl = "";
 
   onMount(async () => {
-    const token = localStorage.getItem("token"); // ✅ was "jwt"
+    const token = localStorage.getItem("token");
 
     if (!token) {
       error = "Not logged in.";
@@ -26,11 +27,24 @@
       if (res.ok) {
         const user = await res.json();
         userEmail = user.email;
+        userRole = user.role;
         pictureUrl =
           user.pictureUrl?.trim() ||
           "https://res.cloudinary.com/dycaquyie/image/upload/v1747570490/Screenshot_2025-05-18_at_13.13.48_dywns0.png";
 
-        hospitals = user.hospitals ?? [];
+        if (user.role === "admin") {
+          const hospitalRes = await fetch("http://localhost:3000/api/hospitals", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (hospitalRes.ok) {
+            hospitals = await hospitalRes.json();
+          } else {
+            error = "Failed to load hospitals for admin.";
+          }
+        } else {
+          hospitals = user.hospitals ?? [];
+        }
       } else {
         error = "Failed to load user info.";
       }
@@ -40,7 +54,7 @@
   });
 
   const deleteHospital = async (id: string) => {
-    const token = localStorage.getItem("token"); // ✅ ensure this matches
+    const token = localStorage.getItem("token");
 
     if (!token) {
       error = "Not logged in.";
@@ -69,7 +83,7 @@
   };
 
   function handleLogout() {
-    localStorage.removeItem("token"); // ✅ was "jwt"
+    localStorage.removeItem("token");
     window.location.href = "/";
   }
 </script>
@@ -81,6 +95,7 @@
     border-radius: 0.5rem;
     border: 1px solid #ddd;
     overflow: hidden;
+    z-index: 1;
   }
 
   .user-info {
@@ -96,34 +111,49 @@
     margin-right: 0.75rem;
     margin-left: 40px;
   }
+
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1100;
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+  }
+
+  :global(.leaflet-container) {
+    z-index: 1 !important;
+  }
 </style>
 
 <section class="section">
-  <!-- Header Row -->
-  <nav class="level mb-5">
-    <div class="level-left">
-      <div class="level-item">
-        <img src="/images/logo.jpg" alt="Logo" style="height: 50px; margin-right: 10px" />
-        <span class="title is-4 has-text-primary">ourHospital</span>
-      </div>
-      {#if userEmail}
-        <div class="level-item user-info">
-          <img src={pictureUrl} alt="User Picture" />
-          <span class="is-size-6">Logged in as <strong>{userEmail}</strong></span>
+  <div class="sticky-header">
+    <nav class="level mb-0">
+      <div class="level-left">
+        <div class="level-item">
+          <img src="/images/logo.jpg" alt="Logo" style="height: 50px; margin-right: 10px" />
+          <span class="title is-4 has-text-primary">ourHospital</span>
         </div>
-      {/if}
-    </div>
-
-    <div class="level-right">
-      <div class="buttons">
-        <a href="/about" class="button is-light">About</a>
-        <a href="/add-hospital" class="button is-link">Add Hospital</a>
-        <button class="button is-danger" on:click={handleLogout}>Logout</button>
+        {#if userEmail}
+          <div class="level-item user-info">
+            <img src={pictureUrl} alt="User Picture" />
+            <span class="is-size-6">Logged in as <strong>{userEmail}</strong></span>
+          </div>
+        {/if}
       </div>
-    </div>
-  </nav>
 
-  <h1 class="title">Hospital Dashboard</h1>
+      <div class="level-right">
+        <div class="buttons">
+          <a href="/about" class="button is-light">About</a>
+          {#if userRole === "admin"}
+            <a href="/admins/master-list" class="button is-primary">➕ Add Hospital</a>
+          {/if}
+          <button class="button is-danger" on:click={handleLogout}>Logout</button>
+        </div>
+      </div>
+    </nav>
+
+    <h1 class="title px-4 py-3">Hospital Dashboard</h1>
+  </div>
 
   {#if error}
     <p class="notification is-danger">{error}</p>
@@ -132,7 +162,6 @@
   {:else}
     {#each hospitals as hospital}
       <div class="box mb-5">
-        <!-- Row 1: Name and Buttons -->
         <div class="columns is-vcentered is-mobile is-multiline mb-2">
           <div class="column is-8">
             <h2 class="title is-4 has-text-weight-bold is-uppercase">
@@ -153,15 +182,10 @@
           </div>
         </div>
 
-        <!-- Row 2: Image + Map -->
         <div class="columns is-variable is-1 is-multiline">
           <div class="column is-one-third">
             <ImageRotator
-              images={[
-                "/images/hospitals/mater-1a.jpg",
-                "/images/hospitals/mater-1b.jpg",
-                "/images/hospitals/mater-1c.jpg"
-              ]}
+              images={["/images/hospitals/mater-1a.jpg","/images/hospitals/mater-1b.jpg","/images/hospitals/mater-1c.jpg"]}
             />
           </div>
           <div class="column is-two-thirds">
