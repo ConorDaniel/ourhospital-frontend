@@ -97,9 +97,13 @@
 >
   <div class="hero-body has-text-centered">
     <div class="container">
-      <h1 class="title has-text-white is-2" style="margin-left: 40px;">Find us, Rate us!</h1>
-      <h5 class="title has-text-warning is-5" style="margin-left: 20px;">Log in for info on Departments and Staff</h5>
-    </div>
+      <h1 class="title has-text-white is-2" style="margin-left: 40px; text-shadow: 2px 2px 2px black, 0 0 5px black, 1px 1px 2px rgba(0,0,0,0.8);">
+        Find us, Rate us!
+      </h1>
+      <h5 class="title has-text-warning is-5" style="margin-left: 20px; text-shadow: 1px 1px 2px black, 0 0 3px black, 1px 1px 1px rgba(0,0,0,0.7);">
+        Log in for info on Departments and Staff
+      </h5>
+          </div>
   </div>
 </section>
 
