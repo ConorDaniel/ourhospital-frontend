@@ -1,0 +1,135 @@
+# Query: http://localhost:3000
+# Flags: CaseSensitive WordMatch RegExp
+# ContextLines: 1
+
+30 results - 11 files
+
+frontend/src/routes/+page.svelte:
+  21    try {
+  22:     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`);
+  23      if (!res.ok) {
+
+  32        hospitalList.map(async (h) => {
+  33:         const r = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${h._id}/ratings/average`);
+  34          return r.ok ? await r.json() : {};
+
+frontend/src/routes/add-hospital/+page.svelte:
+  34      try {
+  35:       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`, {
+  36          method: "POST",
+
+frontend/src/routes/admins/edit-hospital/+page.svelte:
+  31        // ✅ Verify user role
+  32:       const userRes = await ffetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
+  33          headers: { Authorization: `Bearer ${token}` },
+
+  47        // ✅ Load hospital details
+  48:       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`);
+  49        if (res.ok) {
+
+  83      try {
+  84:       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`, {
+  85          method: "PUT",
+
+frontend/src/routes/admins/master-list/+page.svelte:
+  33      try {
+  34:       const userRes = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
+  35          headers: { Authorization: `Bearer ${token}` },
+
+  44  
+  45:       const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`, {
+  46          headers: { Authorization: `Bearer ${token}` },
+
+  87      try {
+  88:       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`, {
+  89          method: "POST",
+
+  98          // Refresh list
+  99:         const updated = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`, {
+  100            headers: { Authorization: `Bearer ${token}` },
+
+frontend/src/routes/charts/+page.svelte:
+  15      try {
+  16:       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`);
+  17        hospitals = await res.json();
+
+  20          hospitals.map(async (h) => {
+  21:           const r = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${h._id}/ratings/average`);
+  22            return r.ok ? await r.json() : {};
+
+frontend/src/routes/dashboard/+page.svelte:
+  20      try {
+  21:       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
+  22          headers: { Authorization: `Bearer ${token}` },
+
+  32          if (user.role === "admin") {
+  33:           const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`, {
+  34              headers: { Authorization: `Bearer ${token}` },
+
+  64      try {
+  65:       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${id}`, {
+  66          method: "DELETE",
+
+frontend/src/routes/departments/+page.svelte:
+  22    async function fetchDepartments() {
+  23:     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`);
+  24      if (res.ok) {
+
+  29  
+  30:     const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`, {
+  31        headers: {
+
+  57  
+  58:     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`, {
+  59        method: "POST",
+
+  81      const token = localStorage.getItem("jwt");
+  82:     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${departmentId}`, {
+  83        method: "DELETE",
+
+frontend/src/routes/rate/+page.svelte:
+  18      if (!hospitalId) return;
+  19:     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`);
+  20      if (res.ok) {
+
+  28    const submitRating = async () => {
+  29:     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/ratings`, {
+  30        method: "POST",
+
+frontend/src/routes/signup/+page.svelte:
+  15      try {
+  16:       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`);
+  17        if (response.ok) {
+
+  52        try {
+  53:         const uploadRes = await fetch(`${import.meta.env.VITE_API_URL}/api/images/upload`, {
+  54            method: "POST",
+
+  75      try {
+  76:       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
+  77          method: "POST",
+
+frontend/src/routes/staff/+page.svelte:
+   26      try {
+   27:       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${departmentId}/staff`);
+   28        if (res.ok) {
+
+   33  
+   34:       const deptRes = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${departmentId}`, {
+   35          headers: {
+
+   63        try {
+   64:         const uploadRes = await fetch(`${import.meta.env.VITE_API_URL}/api/images/upload`, {
+   65            method: "POST",
+
+   88  
+   89:       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${departmentId}/staff`, {
+   90          method: "POST",
+
+  122      const token = localStorage.getItem("token");
+  123:     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/staff/${staffId}`, {
+  124        method: "DELETE",
+
+test/fixtures.js:
+  1: export const serviceUrl = "http://localhost:3000";
+  2  

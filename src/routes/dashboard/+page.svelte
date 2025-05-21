@@ -18,7 +18,7 @@
     }
 
     try {
-      const res = await fetch("http://localhost:3000/api/users/me", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -30,7 +30,7 @@
           "https://res.cloudinary.com/dycaquyie/image/upload/v1747570490/Screenshot_2025-05-18_at_13.13.48_dywns0.png";
 
         if (user.role === "admin") {
-          const hospitalRes = await fetch("http://localhost:3000/api/hospitals", {
+          const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`, {
             headers: { Authorization: `Bearer ${token}` },
           });
 

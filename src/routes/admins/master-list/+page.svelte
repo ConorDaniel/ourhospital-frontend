@@ -31,7 +31,8 @@
     }
 
     try {
-      const userRes = await fetch("http://localhost:3000/api/users/me", {
+      const userRes = await fetch(`${import.meta.env.VITE_API_URL}/api/
+users/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -42,7 +43,8 @@
           "https://res.cloudinary.com/dycaquyie/image/upload/v1747570490/Screenshot_2025-05-18_at_13.13.48_dywns0.png";
       }
 
-      const hospitalRes = await fetch("http://localhost:3000/api/hospitals", {
+      const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/
+hospitals`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -85,7 +87,7 @@
     if (image3Input?.files?.length) formData.append("image3", image3Input.files[0]);
 
     try {
-      const response = await fetch("http://localhost:3000/api/hospitals", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`
@@ -96,7 +98,7 @@
       if (response.ok) {
         message = "✅ Hospital added successfully!";
         // Refresh list
-        const updated = await fetch("http://localhost:3000/api/hospitals", {
+        const updated = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         hospitals = await updated.json();

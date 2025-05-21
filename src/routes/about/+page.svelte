@@ -50,7 +50,7 @@
   
       <hr />
   
-      <p>Conor Leonard 20109017, based on class notes and with the help of ChatGPT 4o</p>
+      <p>Conor Leonard 20109017, based on class resources and with the help of ChatGPT 4o</p>
       <p>Here is a nice picture of a moose:</p>
   
       <figure class="image is-3by2 mt-5">

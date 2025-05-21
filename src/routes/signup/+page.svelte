@@ -13,7 +13,7 @@
 
   onMount(async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/hospitals");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`);
       if (response.ok) {
         hospitals = await response.json();
       } else {
@@ -50,7 +50,7 @@
       formData.append("file", file);
 
       try {
-        const uploadRes = await fetch("http://localhost:3000/api/images/upload", {
+        const uploadRes = await fetch(`${import.meta.env.VITE_API_URL}/api/images/upload`, {
           method: "POST",
           body: formData,
           headers: {
@@ -73,7 +73,7 @@
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/users", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -32,7 +32,8 @@
     };
 
     try {
-      const res = await fetch("http://localhost:3000/api/hospitals", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/
+hospitals`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

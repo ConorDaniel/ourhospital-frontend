@@ -19,7 +19,7 @@
 
     onMount(async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/hospitals");
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`);
     if (!res.ok) {
       error = "Failed to load hospitals: " + (await res.text());
       return;
@@ -30,7 +30,7 @@
     // Fetch average ratings per hospital
     const ratings = await Promise.all(
       hospitalList.map(async (h) => {
-        const r = await fetch(`http://localhost:3000/api/hospitals/${h._id}/ratings/average`);
+        const r = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${h._id}/ratings/average`);
         return r.ok ? await r.json() : {};
       })
     );
@@ -98,7 +98,7 @@
   <div class="hero-body has-text-centered">
     <div class="container">
       <h1 class="title has-text-white is-2" style="margin-left: 40px;">Find us, Rate us!</h1>
-      <h5 class="title has-text-white is-5" style="margin-left: 20px;">Log in for info on Departments and Staff</h5>
+      <h5 class="title has-text-warning is-5" style="margin-left: 20px;">Log in for info on Departments and Staff</h5>
     </div>
   </div>
 </section>

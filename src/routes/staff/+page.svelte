@@ -61,7 +61,7 @@
       formData.append("file", file);
 
       try {
-        const uploadRes = await fetch("http://localhost:3000/api/images/upload", {
+        const uploadRes = await fetch(`${import.meta.env.VITE_API_URL}/api/images/upload", {
           method: "POST",
           body: formData,
           headers: {

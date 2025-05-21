@@ -13,7 +13,7 @@
 
   onMount(async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/hospitals");
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals`);
       hospitals = await res.json();
 
       const ratings = await Promise.all(

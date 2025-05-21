@@ -29,7 +29,8 @@
 
     try {
       // ✅ Verify user role
-      const userRes = await fetch("http://localhost:3000/api/users/me", {
+      const userRes = await fetch(`${import.meta.env.VITE_API_URL}/api/
+users/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -45,7 +46,8 @@
       }
 
       // ✅ Load hospital details
-      const res = await fetch(`http://localhost:3000/api/hospitals/${hospitalId}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/
+hospitals/${hospitalId}`);
       if (res.ok) {
         hospital = await res.json();
         ({ name, type, location, latitude, longitude, staffCount, budget, bedCount, region } = hospital);
@@ -81,7 +83,8 @@
     };
 
     try {
-      const res = await fetch(`http://localhost:3000/api/hospitals/${hospitalId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/
+hospitals/${hospitalId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
