@@ -71,8 +71,8 @@
 
 </script>
 
-<nav class="navbar sticky-navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
+<nav class="navbar sticky-navbar" aria-label="main navigation">
+  <div class="navbar-brand">
         <img src="/images/logo.jpg" alt="Hospital logo" style="max-height: 150px; margin: 30px;" />
         <span class="title is-1 has-text-primary" style="margin-left: 30px;">OurHospital</span>
     </div>
@@ -111,16 +111,17 @@
     <h2 class="title is-4">Browse Hospitals</h2>
 
     <div class="field mb-5" style="max-width: 400px;">
-        <label class="label">Search hospitals by name</label>
-        <div class="control">
-            <input
-                class="input"
-                type="text"
-                placeholder="e.g. Mater"
-                bind:value={searchTerm}
-            />
-        </div>
-    </div>
+      <label class="label" for="hospital-search">Search hospitals by name</label>
+      <div class="control">
+        <input
+          id="hospital-search"
+          class="input"
+          type="text"
+          placeholder="e.g. Mater"
+          bind:value={searchTerm}
+        />
+      </div>
+    </div>    
 
     {#if error}
         <p class="notification is-danger">{error}</p>
