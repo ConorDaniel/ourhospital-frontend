@@ -28,7 +28,6 @@
     }
 
     try {
-      // ✅ Verify user role
       const userRes = await fetch(`${import.meta.env.VITE_API_URL}/api/
 users/me`, {
         headers: { Authorization: `Bearer ${token}` },

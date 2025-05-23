@@ -43,7 +43,6 @@
 
     let pictureUrl = "";
 
-    // ✅ Upload to Cloudinary if file selected
     if (pictureInput?.files?.length) {
       const file = pictureInput.files[0];
       const formData = new FormData();
@@ -102,7 +101,6 @@
   }
 </script>
 
-<!-- ✅ NAVBAR -->
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <img src="/images/logo.jpg" alt="Hospital logo" style="max-height: 64px; margin: 10px;" />

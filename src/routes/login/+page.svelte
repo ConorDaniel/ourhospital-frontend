@@ -18,7 +18,7 @@
 
     if (res.ok) {
       const result = await res.json();
-      localStorage.setItem("token", result.token); // ✅ Save token
+      localStorage.setItem("token", result.token);
       goto("/dashboard");
     } else {
       const result = await res.json();

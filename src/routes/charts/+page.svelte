@@ -34,7 +34,6 @@
         food: ratings[i]?.food ?? 0,
       }));
 
-      // ✅ Ensure Svelte DOM is fully rendered before charting
       await tick();
 
       if (bedsChartEl) {
