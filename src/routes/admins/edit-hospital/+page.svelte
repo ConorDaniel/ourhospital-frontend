@@ -118,14 +118,14 @@ hospitals/${hospitalId}`, {
 
   <form on:submit={handleUpdate}>
     <div class="field">
-      <label class="label">Name</label>
-      <input class="input" bind:value={name} required />
+      <label class="label" for="hospital-name">Name</label>
+      <input class="input" id="hospital-name" bind:value={name} required />
     </div>
-
+  
     <div class="field">
-      <label class="label">Type</label>
+      <label class="label" for="hospital-type">Type</label>
       <div class="select">
-        <select bind:value={type}>
+        <select id="hospital-type" bind:value={type}>
           <option value="National">National</option>
           <option value="Regional">Regional</option>
           <option value="Local">Local</option>
@@ -133,45 +133,45 @@ hospitals/${hospitalId}`, {
         </select>
       </div>
     </div>
-
+  
     <div class="field">
-      <label class="label">Location</label>
-      <input class="input" bind:value={location} required />
+      <label class="label" for="hospital-location">Location</label>
+      <input class="input" id="hospital-location" bind:value={location} required />
     </div>
-
+  
     <div class="field">
-      <label class="label">Latitude</label>
-      <input class="input" type="number" step="any" bind:value={latitude} required />
+      <label class="label" for="hospital-latitude">Latitude</label>
+      <input class="input" id="hospital-latitude" type="number" step="any" bind:value={latitude} required />
     </div>
-
+  
     <div class="field">
-      <label class="label">Longitude</label>
-      <input class="input" type="number" step="any" bind:value={longitude} required />
+      <label class="label" for="hospital-longitude">Longitude</label>
+      <input class="input" id="hospital-longitude" type="number" step="any" bind:value={longitude} required />
     </div>
-
+  
     <div class="field">
-      <label class="label">Staff Count</label>
-      <input class="input" type="number" bind:value={staffCount} required />
+      <label class="label" for="hospital-staff">Staff Count</label>
+      <input class="input" id="hospital-staff" type="number" bind:value={staffCount} required />
     </div>
-
+  
     <div class="field">
-      <label class="label">Budget (€M)</label>
-      <input class="input" type="number" step="0.01" bind:value={budget} required />
+      <label class="label" for="hospital-budget">Budget (€M)</label>
+      <input class="input" id="hospital-budget" type="number" step="0.01" bind:value={budget} required />
     </div>
-
+  
     <div class="field">
-      <label class="label">Bed Count</label>
-      <input class="input" type="number" bind:value={bedCount} required />
+      <label class="label" for="hospital-bedcount">Bed Count</label>
+      <input class="input" id="hospital-bedcount" type="number" bind:value={bedCount} required />
     </div>
-
+  
     <div class="field">
-      <label class="label">Region (0–6)</label>
-      <input class="input" type="number" min="0" max="6" bind:value={region} required />
+      <label class="label" for="hospital-region">Region (0–6)</label>
+      <input class="input" id="hospital-region" type="number" min="0" max="6" bind:value={region} required />
     </div>
-
+  
     <div class="field mt-4">
       <button class="button is-primary" type="submit">Save Changes</button>
       <a href="/admins/master-list" class="button is-light ml-3">Cancel</a>
     </div>
-  </form>
+  </form>  
 </section>

@@ -121,7 +121,6 @@
   </div>
 </nav>
 
-<!-- ✅ SIGNUP FORM -->
 <section class="section">
   <h1 class="title">Sign up</h1>
 
@@ -131,53 +130,53 @@
 
   <form on:submit={handleSignup}>
     <div class="field">
-      <label class="label">Name</label>
-      <div class="field is-horizontal">
-        <div class="field-body">
-          <div class="field">
-            <input
-              class="input"
-              type="text"
-              placeholder="Enter first name"
-              bind:value={firstName}
-              required
-            />
-          </div>
-          <div class="field">
-            <input
-              class="input"
-              type="text"
-              placeholder="Enter last name"
-              bind:value={lastName}
-              required
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="field">
-      <label class="label">Email</label>
+      <label class="label" for="first-name">First Name</label> <!-- 🔧 -->
       <input
         class="input"
+        id="first-name" <!-- 🔧 -->
+        type="text"
+        placeholder="Enter first name"
+        bind:value={firstName}
+        required
+      />
+    </div>
+  
+    <div class="field">
+      <label class="label" for="last-name">Last Name</label> <!-- 🔧 -->
+      <input
+        class="input"
+        id="last-name" <!-- 🔧 -->
+        type="text"
+        placeholder="Enter last name"
+        bind:value={lastName}
+        required
+      />
+    </div>
+  
+    <div class="field">
+      <label class="label" for="email">Email</label> <!-- 🔧 -->
+      <input
+        class="input"
+        id="email" <!-- 🔧 -->
         type="email"
         placeholder="Enter email"
         bind:value={email}
         required
       />
     </div>
-
+  
     <div class="field">
-      <label class="label">Password</label>
+      <label class="label" for="password">Password</label> <!-- 🔧 -->
       <input
         class="input"
+        id="password" <!-- 🔧 -->
         type="password"
         placeholder="Enter password"
         bind:value={password}
         required
       />
     </div>
-
+  
     <div class="field">
       <label class="label">Select Hospitals</label>
       <div class="box" style="max-height: 180px; overflow-y: auto;">
@@ -193,14 +192,20 @@
         {/each}
       </div>
     </div>
-
+  
     <div class="field">
-      <label class="label">Optional Profile Picture</label>
-      <input class="input" type="file" accept="image/*" bind:this={pictureInput} />
+      <label class="label" for="profile-pic">Optional Profile Picture</label> <!-- 🔧 -->
+      <input
+        id="profile-pic" <!-- 🔧 -->
+        class="input"
+        type="file"
+        accept="image/*"
+        bind:this={pictureInput}
+      />
     </div>
-
+  
     <div class="field mt-4">
       <button class="button is-link" type="submit">Submit</button>
     </div>
-  </form>
+  </form>  
 </section>
