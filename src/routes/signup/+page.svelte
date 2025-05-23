@@ -130,10 +130,10 @@
 
   <form on:submit={handleSignup}>
     <div class="field">
-      <label class="label" for="first-name">First Name</label> <!-- 🔧 -->
+      <label class="label" for="first-name">First Name</label>
       <input
         class="input"
-        id="first-name" <!-- 🔧 -->
+        id="first-name"
         type="text"
         placeholder="Enter first name"
         bind:value={firstName}
@@ -142,10 +142,10 @@
     </div>
   
     <div class="field">
-      <label class="label" for="last-name">Last Name</label> <!-- 🔧 -->
+      <label class="label" for="last-name">Last Name</label>
       <input
         class="input"
-        id="last-name" <!-- 🔧 -->
+        id="last-name"
         type="text"
         placeholder="Enter last name"
         bind:value={lastName}
@@ -154,10 +154,10 @@
     </div>
   
     <div class="field">
-      <label class="label" for="email">Email</label> <!-- 🔧 -->
+      <label class="label" for="email">Email</label>
       <input
         class="input"
-        id="email" <!-- 🔧 -->
+        id="email"
         type="email"
         placeholder="Enter email"
         bind:value={email}
@@ -166,10 +166,10 @@
     </div>
   
     <div class="field">
-      <label class="label" for="password">Password</label> <!-- 🔧 -->
+      <label class="label" for="password">Password</label>
       <input
         class="input"
-        id="password" <!-- 🔧 -->
+        id="password"
         type="password"
         placeholder="Enter password"
         bind:value={password}
@@ -194,9 +194,9 @@
     </div>
   
     <div class="field">
-      <label class="label" for="profile-pic">Optional Profile Picture</label> <!-- 🔧 -->
+      <label class="label" for="profile-pic">Optional Profile Picture</label>
       <input
-        id="profile-pic" <!-- 🔧 -->
+        id="profile-pic" 
         class="input"
         type="file"
         accept="image/*"
