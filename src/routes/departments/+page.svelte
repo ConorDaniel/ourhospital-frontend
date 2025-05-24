@@ -16,7 +16,7 @@
       return;
     }
 
-    const token = localStorage.getItem("jwt") || "";
+    token = localStorage.getItem("jwt") || "";
     if (!token) {
       error = "Not logged in.";
       return;
