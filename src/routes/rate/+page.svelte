@@ -16,7 +16,7 @@
 
   onMount(async () => {
     if (!hospitalId) return;
-    const res = await fetch(`http://localhost:3000/api/hospitals/${hospitalId}`);
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`);
     if (res.ok) {
       const hospital = await res.json();
       hospitalName = hospital.name;
@@ -26,7 +26,7 @@
   });
 
   const submitRating = async () => {
-    const res = await fetch(`http://localhost:3000/api/hospitals/${hospitalId}/ratings`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/ratings`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ care, cleanliness, friendliness, food })

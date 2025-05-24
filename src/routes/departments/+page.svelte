@@ -20,14 +20,14 @@
   });
 
   async function fetchDepartments() {
-    const res = await fetch(`http://localhost:3000/api/hospitals/${hospitalId}/departments`);
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`);
     if (res.ok) {
       departments = await res.json();
     } else {
       error = "Failed to load departments.";
     }
 
-    const hospitalRes = await fetch(`http://localhost:3000/api/hospitals/${hospitalId}`, {
+    const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`
       }
@@ -55,7 +55,7 @@
 
     const newDepartment = { title, deptLocation };
 
-    const res = await fetch(`http://localhost:3000/api/hospitals/${hospitalId}/departments`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -79,7 +79,7 @@
     if (!confirmDelete) return;
 
     const token = localStorage.getItem("jwt");
-    const res = await fetch(`http://localhost:3000/api/departments/${departmentId}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${departmentId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`

@@ -24,14 +24,14 @@
 
   async function fetchStaff() {
     try {
-      const res = await fetch(`http://localhost:3000/api/departments/${departmentId}/staff`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${departmentId}/staff`);
       if (res.ok) {
         staffList = await res.json();
       } else {
         error = "Failed to load staff list.";
       }
 
-      const deptRes = await fetch(`http://localhost:3000/api/departments/${departmentId}`, {
+      const deptRes = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${departmentId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
@@ -86,7 +86,7 @@
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch(`http://localhost:3000/api/departments/${departmentId}/staff`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${departmentId}/staff`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -120,7 +120,7 @@
     if (!confirmed) return;
 
     const token = localStorage.getItem("token");
-    const res = await fetch(`http://localhost:3000/api/staff/${staffId}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/staff/${staffId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`

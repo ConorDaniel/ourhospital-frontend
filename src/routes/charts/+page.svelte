@@ -18,7 +18,7 @@
 
       const ratings = await Promise.all(
         hospitals.map(async (h) => {
-          const r = await fetch(`http://localhost:3000/api/hospitals/${h._id}/ratings/average`);
+          const r = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${h._id}/ratings/average`);
           return r.ok ? await r.json() : {};
         })
       );

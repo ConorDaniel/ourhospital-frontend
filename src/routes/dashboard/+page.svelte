@@ -62,7 +62,7 @@
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`http://localhost:3000/api/hospitals/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
