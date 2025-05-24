@@ -11,13 +11,20 @@
   let error = "";
 
   onMount(async () => {
-    if (!hospitalId) {
-      error = "No hospital selected.";
-      return;
-    }
+  if (!hospitalId) {
+    error = "No hospital selected.";
+    return;
+  }
 
-    await fetchDepartments();
-  });
+  const token = localStorage.getItem("jwt");
+  if (!token) {
+    error = "Not logged in.";
+    return;
+  }
+
+  await fetchDepartments();
+});
+
 
   async function fetchDepartments() {
   const token = localStorage.getItem("jwt");
