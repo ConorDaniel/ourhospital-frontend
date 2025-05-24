@@ -26,7 +26,7 @@
   });
 
   async function fetchDepartments() {
-    const token = localStorage.getItem("jwt") || "";
+    token = localStorage.getItem("jwt") || "";
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`, {
