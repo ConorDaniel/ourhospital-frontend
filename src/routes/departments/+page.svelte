@@ -20,23 +20,30 @@
   });
 
   async function fetchDepartments() {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`);
-    if (res.ok) {
-      departments = await res.json();
-    } else {
-      error = "Failed to load departments.";
+  const token = localStorage.getItem("jwt");
+  
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`, {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
+  });
 
-    const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`
-      }
-    });
-    if (hospitalRes.ok) {
-      const hospital = await hospitalRes.json();
-      hospitalName = hospital.name;
-    }
+  if (res.ok) {
+    departments = await res.json();
+  } else {
+    error = "Failed to load departments.";
   }
+
+  const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  if (hospitalRes.ok) {
+    const hospital = await hospitalRes.json();
+    hospitalName = hospital.name;
+  }
+}
 
   async function handleSubmit(event: Event) {
     event.preventDefault();

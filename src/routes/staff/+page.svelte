@@ -152,9 +152,13 @@
         <div class="column is-one-third">
           <div class="box">
             {#if staff.pictureUrl}
-              <figure class="image mb-2">
-                <img src={staff.pictureUrl} alt="Staff Picture" style="max-height: 120px; border-radius: 8px;" />
-              </figure>
+            <figure class="image mb-2" style="max-width: 200px; margin: auto;">
+              <img
+                src={staff.pictureUrl}
+                alt={`Portrait of ${staff.name}`}
+                style="width: 100%; height: auto; object-fit: cover; border-radius: 8px;"
+              />
+            </figure>
             {/if}
             <p><strong>{staff.name}</strong></p>
             <p><em>{staff.role}</em></p>

@@ -187,14 +187,23 @@
 
         <div class="columns is-variable is-1 is-multiline">
           <div class="column is-one-third">
+            {#if hospital.imageUrls && hospital.imageUrls.length > 1}
+                <ImageRotator images={hospital.imageUrls} />
+            {:else if hospital.imageUrls && hospital.imageUrls.length === 1}
+              <figure class="image is-3by2">
+              <img src={hospital.imageUrls[0]} alt="Hospital Image" style="border-radius: 0.5rem;" />
+            </figure>
+          {:else}
             <ImageRotator
               images={[
-                "/images/hospitals/mater-1a.jpg",
-                "/images/hospitals/mater-1b.jpg",
-                "/images/hospitals/mater-1c.jpg"
-              ]}
-            />
+              "/images/hospitals/mater-1a.jpg",
+              "/images/hospitals/mater-1b.jpg",
+              "/images/hospitals/mater-1c.jpg"
+                ]}
+              />
+            {/if}
           </div>
+          
           <div class="column is-two-thirds">
             <div class="map-wrapper">
               <HospitalMap lat={hospital.latitude} lng={hospital.longitude} />
