@@ -222,7 +222,7 @@
 	  height: 300px;
 	  background-size: cover;
 	  background-position: center;
-	  margin-top: 10px; /* creates spacing below navbar */
+	  margin-top: 20px; /* creates spacing below navbar */
 	}
   
 	.sticky-navbar {
