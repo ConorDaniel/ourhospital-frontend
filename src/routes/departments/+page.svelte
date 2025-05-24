@@ -9,49 +9,54 @@
   let title = "";
   let deptLocation = "";
   let error = "";
-  let token = "";
 
   onMount(async () => {
-  if (!hospitalId) {
-    error = "No hospital selected.";
-    return;
-  }
-
-  await fetchDepartments();
-});
-
-
-async function fetchDepartments() {
-  const token = localStorage.getItem("jwt");
-
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    if (res.ok) {
-      departments = await res.json();
-    } else {
-      error = "Failed to load departments.";
+    if (!hospitalId) {
+      error = "No hospital selected.";
       return;
     }
 
-    const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    if (hospitalRes.ok) {
-      const hospital = await hospitalRes.json();
-      hospitalName = hospital.name;
+    const token = localStorage.getItem("jwt") || "";
+    if (!token) {
+      error = "Not logged in.";
+      return;
     }
-  } catch (err) {
-    error = "Network error: " + err.message;
+
+    await fetchDepartments();
+  });
+
+  async function fetchDepartments() {
+    const token = localStorage.getItem("jwt") || "";
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (res.ok) {
+        departments = await res.json();
+      } else {
+        error = "Failed to load departments.";
+        return;
+      }
+
+      const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (hospitalRes.ok) {
+        const hospital = await hospitalRes.json();
+        hospitalName = hospital.name;
+      }
+    } catch (err) {
+      error = "Network error: " + err.message;
+    }
   }
-}
+
   async function handleSubmit(event: Event) {
     event.preventDefault();
     error = "";
@@ -61,6 +66,7 @@ async function fetchDepartments() {
       return;
     }
 
+    const token = localStorage.getItem("jwt") || "";
     if (!token) {
       error = "Not logged in.";
       return;
@@ -91,6 +97,12 @@ async function fetchDepartments() {
     const confirmDelete = confirm("Are you sure you want to delete this department?");
     if (!confirmDelete) return;
 
+    const token = localStorage.getItem("jwt") || "";
+    if (!token) {
+      error = "Not logged in.";
+      return;
+    }
+
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${departmentId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` }
@@ -103,6 +115,7 @@ async function fetchDepartments() {
     }
   }
 </script>
+
 
 
 <section class="section">
