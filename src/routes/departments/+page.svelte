@@ -9,48 +9,48 @@
   let title = "";
   let deptLocation = "";
   let error = "";
+  let token = "";
 
   onMount(async () => {
-  if (!hospitalId) {
-    error = "No hospital selected.";
-    return;
-  }
+    if (!hospitalId) {
+      error = "No hospital selected.";
+      return;
+    }
 
-  const token = localStorage.getItem("jwt");
-  if (!token) {
-    error = "Not logged in.";
-    return;
-  }
+    token = localStorage.getItem("jwt") || "";
+    if (!token) {
+      error = "Not logged in.";
+      return;
+    }
 
-  await fetchDepartments();
-});
-
+    await fetchDepartments();
+  });
 
   async function fetchDepartments() {
-  const token = localStorage.getItem("jwt");
-  
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-  if (res.ok) {
-    departments = await res.json();
-  } else {
-    error = "Failed to load departments.";
-  }
+      if (res.ok) {
+        departments = await res.json();
+      } else {
+        error = "Failed to load departments.";
+        return;
+      }
 
-  const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
+      const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (hospitalRes.ok) {
+        const hospital = await hospitalRes.json();
+        hospitalName = hospital.name;
+      }
+    } catch (err) {
+      error = "Network error: " + err.message;
     }
-  });
-  if (hospitalRes.ok) {
-    const hospital = await hospitalRes.json();
-    hospitalName = hospital.name;
   }
-}
 
   async function handleSubmit(event: Event) {
     event.preventDefault();
@@ -61,7 +61,6 @@
       return;
     }
 
-    const token = localStorage.getItem("jwt");
     if (!token) {
       error = "Not logged in.";
       return;
@@ -92,12 +91,9 @@
     const confirmDelete = confirm("Are you sure you want to delete this department?");
     if (!confirmDelete) return;
 
-    const token = localStorage.getItem("jwt");
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${departmentId}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     });
 
     if (res.ok) {
@@ -107,6 +103,7 @@
     }
   }
 </script>
+
 
 <section class="section">
   <h1 class="title">Departments</h1>
