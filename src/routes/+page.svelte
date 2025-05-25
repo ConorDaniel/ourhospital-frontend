@@ -219,10 +219,10 @@
 	}
   
 	.fixed-hero {
-	  height: 300px;
+	  height: 500px;
 	  background-size: cover;
 	  background-position: top center;
-	  margin-top: 20px; /* creates spacing below navbar */
+	  margin-top: 20px;
 	}
   
 	.sticky-navbar {
