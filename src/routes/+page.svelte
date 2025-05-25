@@ -221,7 +221,7 @@
 	.fixed-hero {
 	  height: 300px;
 	  background-size: cover;
-	  background-position: center;
+	  background-position: top center;
 	  margin-top: 20px; /* creates spacing below navbar */
 	}
   

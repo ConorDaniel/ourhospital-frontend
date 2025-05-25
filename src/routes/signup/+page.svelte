@@ -87,16 +87,16 @@
       });
 
       if (response.ok) {
-        message = "✅ Sign-up successful! Redirecting...";
+        message = "Sign-up successful! Redirecting...";
         setTimeout(() => {
           window.location.href = "/login";
         }, 1500);
       } else {
         const error = await response.text();
-        message = "❌ Sign-up failed: " + error;
+        message = "Sign-up failed: " + error;
       }
     } catch (err) {
-      message = "❌ Network error: " + err.message;
+      message = "Network error: " + err.message;
     }
   }
 </script>

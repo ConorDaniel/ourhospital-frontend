@@ -58,7 +58,9 @@
 
   .form-container {
     margin: 3rem auto;
-    max-width: 400px;
+    width: 100%;
+    max-width: 600px;
+    min-width: 300px;
     padding: 2rem;
     border: 1px solid #ddd;
     border-radius: 8px;
