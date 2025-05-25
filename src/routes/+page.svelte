@@ -151,7 +151,7 @@
 
                 <!-- Row 2: Image, Rate Button, Map -->
                 <div class="columns is-variable is-1 is-multiline">
-                    <div class="column is-one-third">
+                  <div class="column is-12-mobile is-5-tablet is-5-desktop is-5-widescreen">
                         {#if hospital.imageUrls && hospital.imageUrls.length > 1}
                           <ImageRotator images={hospital.imageUrls} />
                         {:else if hospital.imageUrls && hospital.imageUrls.length === 1}
@@ -190,7 +190,7 @@
                         </div>
                       </div>                      
 
-                    <div class="column is-two-thirds">
+                      <div class="column is-12-mobile is-7-tablet is-7-desktop is-7-widescreen">
                         <div class="map-wrapper">
                             {#key hospital._id}
                                 <HospitalMap lat={hospital.latitude} lng={hospital.longitude} />
