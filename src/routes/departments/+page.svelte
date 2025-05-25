@@ -16,7 +16,7 @@
       return;
     }
 
-    token = localStorage.getItem("jwt") || "";
+    const token = localStorage.getItem("token");
     if (!token) {
       error = "Not logged in.";
       return;
@@ -26,7 +26,11 @@
   });
 
   async function fetchDepartments() {
-    token = localStorage.getItem("jwt") || "";
+    const token = localStorage.getItem("token");
+    if (!token) {
+      error = "Not logged in.";
+      return;
+    }
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`, {
@@ -39,7 +43,6 @@
         departments = await res.json();
       } else {
         error = "Failed to load departments.";
-        return;
       }
 
       const hospitalRes = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}`, {
@@ -53,7 +56,7 @@
         hospitalName = hospital.name;
       }
     } catch (err) {
-      error = "Network error: " + err.message;
+      error = "Error fetching hospital or departments: " + err.message;
     }
   }
 
@@ -66,56 +69,63 @@
       return;
     }
 
-    const token = localStorage.getItem("jwt") || "";
+    const token = localStorage.getItem("token");
     if (!token) {
       error = "Not logged in.";
       return;
     }
 
-    const newDepartment = { title, deptLocation };
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ title, deptLocation })
+      });
 
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/hospitals/${hospitalId}/departments`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(newDepartment)
-    });
-
-    if (res.ok) {
-      title = "";
-      deptLocation = "";
-      await fetchDepartments();
-    } else {
-      const result = await res.json().catch(() => null);
-      error = result?.message || "Failed to add department.";
+      if (res.ok) {
+        title = "";
+        deptLocation = "";
+        await fetchDepartments();
+      } else {
+        const result = await res.json().catch(() => null);
+        error = result?.message || "Failed to add department.";
+      }
+    } catch (err) {
+      error = "Failed to submit department: " + err.message;
     }
   }
 
   async function deleteDepartment(departmentId: string) {
-    const confirmDelete = confirm("Are you sure you want to delete this department?");
-    if (!confirmDelete) return;
+    const confirmed = confirm("Are you sure you want to delete this department?");
+    if (!confirmed) return;
 
-    const token = localStorage.getItem("jwt") || "";
+    const token = localStorage.getItem("token");
     if (!token) {
       error = "Not logged in.";
       return;
     }
 
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${departmentId}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${departmentId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
-    if (res.ok) {
-      await fetchDepartments();
-    } else {
-      error = "Failed to delete department.";
+      if (res.ok) {
+        await fetchDepartments();
+      } else {
+        error = "Failed to delete department.";
+      }
+    } catch (err) {
+      error = "Error deleting department: " + err.message;
     }
   }
 </script>
-
 
 
 <section class="section">
