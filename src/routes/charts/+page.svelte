@@ -10,6 +10,7 @@
   let staffChartEl;
   let budgetChartEl;
   let ratingChartEl;
+  let budgetPieChartEl;
 
   onMount(async () => {
     try {
@@ -80,6 +81,26 @@
           colors: ["#21ba45"]
         });
       }
+
+      // BUDGET PIE CHART with percentages
+      const totalBudget = chartData.reduce((sum, h) => sum + (h.budget || 0), 0);
+      const budgetValues = chartData.map(h => h.budget || 0);
+      const budgetLabels = chartData.map((h, i) => {
+        const percent = totalBudget > 0 ? ((budgetValues[i] / totalBudget) * 100).toFixed(1) : 0;
+        return `${h.name} (${percent}%)`;
+      });
+
+      if (budgetPieChartEl) {
+        new Chart(budgetPieChartEl, {
+          title: "Share of Total Budget by Hospital",
+          type: "pie",
+          data: {
+            labels: budgetLabels,
+            datasets: [{ values: budgetValues }]
+          }
+        });
+      }
+
     } catch (err) {
       console.error("Chart loading failed:", err);
     }
@@ -102,7 +123,6 @@
   }
 </style>
 
-  
 <section class="section">
   <h1 class="title">Hospital Charts</h1>
 
@@ -120,5 +140,9 @@
 
   <div class="chart-container my-5">
     <div bind:this={ratingChartEl}></div>
+  </div>
+
+  <div class="chart-container my-5">
+    <div bind:this={budgetPieChartEl}></div>
   </div>
 </section>
