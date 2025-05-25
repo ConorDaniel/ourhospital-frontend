@@ -169,12 +169,13 @@
                         {/if}
                       
                         {#if hospital.averageRating}
-                          <div class="has-text-left mt-3" style="padding-left: 10px;">
-                            <div><strong>Care:</strong> {@html stars(hospital.averageRating.care)}</div>
-                            <div><strong>Cleanliness:</strong> {@html stars(hospital.averageRating.cleanliness)}</div>
-                            <div><strong>Friendliness:</strong> {@html stars(hospital.averageRating.friendliness)}</div>
-                            <div><strong>Food:</strong> {@html stars(hospital.averageRating.food)}</div>
-                          </div>
+                        <div class="content mt-3">
+                          <p><strong>Care:</strong> {@html stars(hospital.averageRating.care)}</p>
+                          <p><strong>Cleanliness:</strong> {@html stars(hospital.averageRating.cleanliness)}</p>
+                          <p><strong>Friendliness:</strong> {@html stars(hospital.averageRating.friendliness)}</p>
+                          <p><strong>Food:</strong> {@html stars(hospital.averageRating.food)}</p>
+                        </div>
+
                         {:else}
                           <p class="has-text-grey mt-3 has-text-centered">No ratings yet</p>
                         {/if}
@@ -221,7 +222,7 @@
 	.fixed-hero {
 	  height: 500px;
 	  background-size: cover;
-	  background-position: top center;
+	  background-position: center;
 	  margin-top: 20px;
 	}
   
